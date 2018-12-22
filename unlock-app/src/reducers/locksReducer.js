@@ -1,8 +1,9 @@
 import {
-  CREATE_LOCK,
   ADD_LOCK,
-  UPDATE_LOCK,
+  CREATE_LOCK,
+  DELETE_LOCK,
   LOCK_DEPLOYED,
+  UPDATE_LOCK,
 } from '../actions/lock'
 import { DELETE_TRANSACTION } from '../actions/transaction'
 import { SET_PROVIDER } from '../actions/provider'
@@ -78,6 +79,16 @@ const locksReducer = (state = initialState, action) => {
     return {
       ...state,
       [action.address]: Object.assign(state[action.address], action.update),
+    }
+  }
+
+  if (action.type === DELETE_LOCK) {
+    if (!state[action.address]) {
+      throw new Error('Could not delete missing lock')
+    }
+    delete state[action.address]
+    return {
+      ...state,
     }
   }
 

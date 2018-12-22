@@ -3,9 +3,10 @@ import { LOCATION_CHANGE } from 'react-router-redux'
 import lockMiddleware from '../../middlewares/lockMiddleware'
 import {
   ADD_LOCK,
-  UPDATE_LOCK,
   CREATE_LOCK,
+  DELETE_LOCK,
   LOCK_DEPLOYED,
+  UPDATE_LOCK,
   WITHDRAW_FROM_LOCK,
 } from '../../actions/lock'
 import { PURCHASE_KEY, UPDATE_KEY } from '../../actions/key'
@@ -14,6 +15,7 @@ import { SET_NETWORK } from '../../actions/network'
 import { SET_PROVIDER } from '../../actions/provider'
 import { ADD_TRANSACTION, UPDATE_TRANSACTION } from '../../actions/transaction'
 import { SET_ERROR } from '../../actions/error'
+import { TRANSACTION_TYPES } from '../../constants'
 
 /**
  * Fake state
@@ -334,15 +336,38 @@ describe('Lock middleware', () => {
     })
   })
 
-  it('it should handle error events triggered by the web3Service', () => {
-    const { store } = create()
-    mockWeb3Service.emit('error', { message: 'this was broken' })
-    expect(store.dispatch).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: SET_ERROR,
-        error: expect.anything(), // not sure how to test against jsx
+  describe('error events triggered by the web3Service', () => {
+    it('should handle error triggered when creating a lock', () => {
+      expect.assertions(2)
+      const { store } = create()
+      const transaction = {
+        type: TRANSACTION_TYPES.LOCK_CREATION,
+        lock: '0x123',
+      }
+      mockWeb3Service.emit('error', { message: 'this was broken' }, transaction)
+      expect(store.dispatch).toHaveBeenNthCalledWith(1, {
+        type: DELETE_LOCK,
+        address: transaction.lock,
       })
-    )
+      expect(store.dispatch).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          type: SET_ERROR,
+          error: expect.anything(), // not sure how to test against jsx
+        })
+      )
+    })
+
+    it('it should handle error events triggered by the web3Service', () => {
+      const { store } = create()
+      mockWeb3Service.emit('error', { message: 'this was broken' })
+      expect(store.dispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: SET_ERROR,
+          error: expect.anything(), // not sure how to test against jsx
+        })
+      )
+    })
   })
 
   describe('when web3Service is not ready', () => {
