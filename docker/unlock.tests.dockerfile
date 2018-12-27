@@ -4,4 +4,3 @@ RUN mkdir /home/unlock
 COPY . /home/unlock
 WORKDIR /home/unlock
 
-CMD ./tests.sh

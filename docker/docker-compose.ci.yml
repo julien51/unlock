@@ -12,3 +12,4 @@ services:
       dockerfile: ./docker/unlock.tests.dockerfile
     depends_on:
       - ganache
+    command: ["./tests.sh"]
