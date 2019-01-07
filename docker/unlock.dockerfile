@@ -16,25 +16,25 @@ USER node
 COPY --chown=node scripts/postinstall.sh /home/unlock/scripts/postinstall.sh
 COPY --chown=node package-lock.json /home/unlock/.
 COPY --chown=node package.json /home/unlock/.
-RUN SKIP_SERVICES=true npm ci
+RUN SKIP_SERVICES=true npm ci --production
 
 RUN mkdir /home/unlock/tests
 COPY --chown=node tests/package-lock.json /home/unlock/tests/.
 COPY --chown=node tests/package.json /home/unlock/tests/.
 WORKDIR /home/unlock/tests
-RUN npm ci
+RUN npm ci --production
 
 RUN mkdir /home/unlock/smart-contracts
 COPY --chown=node smart-contracts/package-lock.json /home/unlock/smart-contracts/.
 COPY --chown=node smart-contracts/package.json /home/unlock/smart-contracts/.
 WORKDIR /home/unlock/smart-contracts
-RUN npm ci
+RUN npm ci --production
 
 RUN mkdir /home/unlock/unlock-app
 COPY --chown=node unlock-app/package-lock.json /home/unlock/unlock-app/.
 COPY --chown=node unlock-app/package.json /home/unlock/unlock-app/.
 WORKDIR /home/unlock/unlock-app
-RUN npm ci
+RUN npm ci --production
 
 # Copy the rest
 COPY --chown=node . /home/unlock
