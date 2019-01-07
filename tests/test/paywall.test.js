@@ -17,13 +17,14 @@ describe('Paywall', () => {
     const submitButton = (await page.$x(submitButtonXpath))[0]
     await submitButton.click()
     await page.waitForSelector('button[title="Show embed code"]')
-    const previewButton = await page.$('button[title="Show embed code"]')
-    await previewButton.click()
+    await page.evaluate(() => {
+      const previewButton = document.querySelector('button[title="Show embed code"]')
+      previewButton.click()
+    })
     await page.waitForSelector('a[title="Preview lock"]')
-    await Promise.all([
-      page.waitForNavigation(),
-      page.$('a[title="Preview lock"]').click(),
-    ])
+    const demoLink = await page.$('a[title="Preview lock"]')
+    await demoLink.click()
+    await page.waitForNavigation()
     done()
   })
   it('should load the paywall if a lock is present', async () => {
