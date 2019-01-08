@@ -2,41 +2,29 @@ language: generic
 services:
   - docker
 stages:
-  - test
+  - tests
   - deploy
 jobs:
   include:
-    - stage: test
+    - stage: tests
       name: "Smart Contracts tests"
       before_script:
-        - scripts/pull-image.sh
-        - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
-        - scripts/build-image.sh unlock-integration
-        - scripts/docker-compose-build.sh
+        - scripts/build_setup.sh
       script: scripts/tests.sh smart-contracts
-    - stage: test
+    - stage: tests
       name: "Unlock App tests"
       before_script:
-        - scripts/pull-image.sh
-        - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
-        - scripts/build-image.sh unlock-integration
-        - scripts/docker-compose-build.sh
+        - scripts/build_setup.sh
       script: scripts/tests.sh unlock-app
-    - stage: test
+    - stage: tests
       name: "Integration tests"
       before_script:
-        - scripts/pull-image.sh
-        - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
-        - scripts/build-image.sh unlock-integration
-        - scripts/docker-compose-build.sh
+        - scripts/build_setup.sh
       script: scripts/tests.sh integration-tests
-    - stage: test
+    - stage: tests
       name: "Locksmith tests"
       before_script:
-        - scripts/pull-image.sh
-        - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
-        - scripts/build-image.sh unlock-integration
-        - scripts/docker-compose-build.sh
+        - scripts/build_setup.sh
       script: scripts/tests.sh locksmith
     - stage: deploy
       name: "Deploy to Netlify"
