@@ -7,7 +7,7 @@ stages:
 jobs:
   include:
     - stage: test
-      name: "Tests"
+      name: "Smart Contracts tests"
       before_script:
         - scripts/pull-image.sh
         - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
@@ -15,10 +15,28 @@ jobs:
         - scripts/docker-compose-build.sh
       script: scripts/tests.sh smart-contracts
     - stage: test
+      name: "Unlock App tests"
+      before_script:
+        - scripts/pull-image.sh
+        - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
+        - scripts/build-image.sh unlock-integration
+        - scripts/docker-compose-build.sh
       script: scripts/tests.sh unlock-app
     - stage: test
+      name: "Integration tests"
+      before_script:
+        - scripts/pull-image.sh
+        - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
+        - scripts/build-image.sh unlock-integration
+        - scripts/docker-compose-build.sh
       script: scripts/tests.sh integration-tests
     - stage: test
+      name: "Locksmith tests"
+      before_script:
+        - scripts/pull-image.sh
+        - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
+        - scripts/build-image.sh unlock-integration
+        - scripts/docker-compose-build.sh
       script: scripts/tests.sh locksmith
     - stage: deploy
       name: "Deploy to Netlify"
