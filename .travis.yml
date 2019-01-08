@@ -15,7 +15,7 @@ include:
     env:
       - TEST_SUITE=smart-contracts
       - TEST_SUITE=unlock-app
-      - TEST_SOUTE=integration-tests
+      - TEST_SUITE=integration-tests
       - TEST_SUITE=locksmith  
     script: "scripts/tests.sh $TEST_SUITE"
   - stage: deploy
