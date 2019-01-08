@@ -13,12 +13,13 @@ jobs:
         - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
         - scripts/build-image.sh unlock-integration
         - scripts/docker-compose-build.sh
-      env:
-        - TEST_SUITE=smart-contracts
-        - TEST_SUITE=unlock-app
-        - TEST_SUITE=integration-tests
-        - TEST_SUITE=locksmith  
-      script: "scripts/tests.sh $TEST_SUITE"
+      script: scripts/tests.sh smart-contracts
+    - stage: test
+      script: scripts/tests.sh unlock-app
+    - stage: test
+      script: scripts/tests.sh integration-tests
+    - stage: test
+      script: scripts/tests.sh locksmith
     - stage: deploy
       name: "Deploy to Netlify"
       script:
