@@ -6,11 +6,12 @@ before_script:
   - scripts/build-image.sh unlock 461040265176.dkr.ecr.us-east-1.amazonaws.com/unlock:latest
   - scripts/build-image.sh unlock-integration
   - scripts/docker-compose-build.sh
-script:
-  - scripts/tests.sh smart-contracts
-  - scripts/tests.sh unlock-app
-  - scripts/tests.sh integration-tests
-  - scripts/tests.sh locksmith 
+env:
+  - TEST_SUITE=smart-contracts
+  - TEST_SUITE=unlock-app
+  - TEST_SOUTE=integration-tests
+  - TEST_SUITE=locksmith  
+script: "scripts/tests.sh $TEST_SUITE"
 after_success:
   - scripts/deploy.sh netlify
   - scripts/push-image.sh
