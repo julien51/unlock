@@ -1,7 +1,9 @@
 const url = require('../helpers/url')
+const waitForFrame = require('../helpers/frame')
 
 describe('Paywall', () => {
   let page
+  let demo
   beforeEach(async (done) => {
     jest.setTimeout(100000)
     const createLockButtonXpath = '//button[text() = "Create Lock"]'
@@ -21,13 +23,16 @@ describe('Paywall', () => {
       const previewButton = document.querySelector('button[title="Show embed code"]')
       previewButton.click()
     })
+    await page.waitFor(1000) // make sure the lock address is updated
     await page.waitForSelector('a[title="Preview lock"]')
     const demoLink = await page.$('a[title="Preview lock"]')
     await demoLink.click()
-    await page.waitForNavigation()
+    demo = await browser.waitForTarget(target => target.url().match(/demo/))
+    demo = await demo.page()
     done()
   })
   it('should load the paywall if a lock is present', async () => {
-
+    const paywall = await waitForFrame(demo, /paywall/)
+    expect(await paywall.content()).toMatch('You have reached your limit of free articles')
   })
 })
