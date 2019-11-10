@@ -1,6 +1,6 @@
 ![Unlock](https://raw.githubusercontent.com/unlock-protocol/unlock/master/unlock-app/src/static/images/unlock-word-mark.png?sanitize=true)
 
-![Members](https://member-wall-pz5kh35ev.now.sh/api/members?locks=0xb0ad425ca5792dd4c4af9177c636e5b0e6c317bf?sanitize=true)
+![Members](https://member-wall.julien51.now.sh/api/members?locks=0xb0ad425ca5792dd4c4af9177c636e5b0e6c317bf&sanitize=true)
 ---
 
 This repository includes all the code deployed by Unlock, including smart contracts and the web app running at https://unlock-protocol.com.
