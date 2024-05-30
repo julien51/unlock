@@ -1,0 +1,15 @@
+name: Prod Release
+
+on:
+  workflow_call:
+
+jobs:
+ handle_release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run release script
+      run: ./scripts/release.sh
