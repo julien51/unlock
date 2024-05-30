@@ -3,14 +3,16 @@ name: Prod Release
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'     
+      commit_hash:
+        description: 'Commit hash for the release PR'     
         required: true
-        default: 'warning'
-      tags:
-        description: 'Test scenario tags'  
   workflow_call:
-
+    inputs:
+      commit_hash:
+        description: 'Commit hash for the release PR'     
+        required: true
+        type: string
+  
 jobs:
  handle_release:
     runs-on: ubuntu-latest
