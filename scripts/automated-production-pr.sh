@@ -2,13 +2,6 @@
 
 set -e
 
-# Pull all remote
-git fetch origin
-
-# get the timestamp of the latests commit to be deployed
-COMMIT_TO_DEPLOY=`git rev-list -1 --before={2.days.ago} master`
-COMMIT_TO_DEPLOY_TIMESTAMP=`git show -s --format=%ct $COMMIT_TO_DEPLOY`
-
 # Get the timestamp of the latest commit deployed
 # For this we need to parse the commit message of the latest production commit
 # IMPORTANT: all of our commits on production need to have the latest commit from master which they deploy
@@ -28,9 +21,9 @@ fi
 
 LATEST_PRODUCTION_TIMESTAMP=`git show -s --format=%ct $LATEST_COMMIT_ID_IN_PRODUCTION`
 
-if [[ $((COMMIT_TO_DEPLOY_TIMESTAMP)) < $((LATEST_PRODUCTION_TIMESTAMP)) ]]
+if [[ $((GITHUB_SHA)) < $((LATEST_PRODUCTION_TIMESTAMP)) ]]
 then
-  COMMIT_TO_DEPLOY_DATE=`date -d @$COMMIT_TO_DEPLOY_TIMESTAMP`
+  COMMIT_TO_DEPLOY_DATE=`date -d @$GITHUB_SHA`
   LATEST_PRODUCTION_DATE=`date -d @$LATEST_PRODUCTION_TIMESTAMP`
   echo "Latest production ($LATEST_PRODUCTION: $LATEST_PRODUCTION_DATE) is more recent than stable master ($COMMIT_TO_DEPLOY: $COMMIT_TO_DEPLOY_DATE) : skipping deployment."
   exit 0
