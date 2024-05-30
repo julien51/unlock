@@ -8,7 +8,7 @@ COMMIT_TO_DEPLOY_TIMESTAMP=`git show -s --format=%ct $COMMIT_TO_DEPLOY`
 echo "This command will open a pull request to deploy $COMMIT_TO_DEPLOY to production"
 
 echo "Syncing branches"
-get fetch
+git fetch
 
 echo "Creating a new branch"
 BRANCH="production-$(date +%Y%m%d-%H%M%S)"
