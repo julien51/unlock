@@ -10,10 +10,6 @@ echo "This command will open a pull request to deploy $COMMIT_TO_DEPLOY to produ
 echo "Syncing branches"
 git fetch
 
-echo "Creating a new branch"
-BRANCH="production-$(date +%Y%m%d-%H%M%S)"
-git checkout -b $BRANCH $COMMIT_TO_DEPLOY
-
 echo "Diffing versus latest production"
 LATEST_PRODUCTION=`git rev-parse origin/production`
 git reset --soft $LATEST_PRODUCTION
