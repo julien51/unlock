@@ -23,3 +23,18 @@ jobs:
 
       - name: Run release script
         run: ./scripts/automated-production-pr.sh
+
+      # - name: Render template
+      #   id: template
+      #   uses: chuhlomin/render-template@v1.4
+      #   with:
+      #     template: .github/pull-request-template.md
+          
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'production release as of ${{ github.event.inputs.commit_hash }}'
+          title: 'Prod deploy'
+          body: ${{ steps.template.outputs.result }}
+          branch: prod-deploy
