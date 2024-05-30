@@ -1,0 +1,25 @@
+name: Prod Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'Commit hash for the release PR'     
+        required: true
+  workflow_call:
+    inputs:
+      commit_hash:
+        description: 'Commit hash for the release PR'     
+        required: true
+        type: string
+  
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run release script
+        run: ./scripts/automated-production-pr.sh
