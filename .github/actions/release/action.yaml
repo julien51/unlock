@@ -1,0 +1,16 @@
+name: Prod Release
+description: Opens a prod pull-request when a release is created
+on:
+  release:
+    types: [published]
+
+jobs:
+ handle_release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Run release script
+      run: ./scripts/release.sh

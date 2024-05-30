@@ -1,107 +1,107 @@
-name: 'Staging / master branch'
+# name: 'Staging / master branch'
 
-on:
-  push:
-    branches:
-      - master
-jobs:
-  run-all-tests:
-    uses: ./.github/workflows/_tests.yml
+# on:
+#   push:
+#     branches:
+#       - master
+# jobs:
+#   run-all-tests:
+#     uses: ./.github/workflows/_tests.yml
 
-  deploy-locksmith-staging:
-    if: ${{ github.repository_owner == 'unlock-protocol' }}
-    needs: run-all-tests
-    uses: ./.github/workflows/_heroku.yml
-    with:
-      bypass_diff_check: bypass
-      service: locksmith
-      app-name: unlock-locksmith-staging
-    secrets:
-      HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+#   deploy-locksmith-staging:
+#     if: ${{ github.repository_owner == 'unlock-protocol' }}
+#     needs: run-all-tests
+#     uses: ./.github/workflows/_heroku.yml
+#     with:
+#       bypass_diff_check: bypass
+#       service: locksmith
+#       app-name: unlock-locksmith-staging
+#     secrets:
+#       HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+#       HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#       OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
-  # Netlify Deployments
-  # The unlock-protocol-com site is built from `master` as we don't use a staging site for it.
-  deploy-unlock-protocol-com-production:
-    if: ${{ github.repository_owner == 'unlock-protocol' }} # make sure we dont deploy from forks
-    needs: run-all-tests
-    uses: ./.github/workflows/_netlify.yml
-    with:
-      bypass_diff_check: bypass
-      service: unlock-protocol-com
-      target-env: prod
-    secrets:
-      SITE_ID: ${{ secrets.UNLOCK_PROTOCOL_COM_NETLIFY_PROD_SITE_ID }}
-      AUTH_TOKEN: ${{ secrets.UNLOCK_PROTOCOL_COM_NETLIFY_PROD_AUTH_TOKEN }}
-      NEXT_PUBLIC_UNLOCK_GA_ID: ${{ secrets.UNLOCK_PROTOCOL_COM_NETLIFY_PROD_UNLOCK_GA_ID }}
+#   # Netlify Deployments
+#   # The unlock-protocol-com site is built from `master` as we don't use a staging site for it.
+#   deploy-unlock-protocol-com-production:
+#     if: ${{ github.repository_owner == 'unlock-protocol' }} # make sure we dont deploy from forks
+#     needs: run-all-tests
+#     uses: ./.github/workflows/_netlify.yml
+#     with:
+#       bypass_diff_check: bypass
+#       service: unlock-protocol-com
+#       target-env: prod
+#     secrets:
+#       SITE_ID: ${{ secrets.UNLOCK_PROTOCOL_COM_NETLIFY_PROD_SITE_ID }}
+#       AUTH_TOKEN: ${{ secrets.UNLOCK_PROTOCOL_COM_NETLIFY_PROD_AUTH_TOKEN }}
+#       NEXT_PUBLIC_UNLOCK_GA_ID: ${{ secrets.UNLOCK_PROTOCOL_COM_NETLIFY_PROD_UNLOCK_GA_ID }}
 
-  deploy-paywall-app:
-    if: ${{ github.repository_owner == 'unlock-protocol' }}
-    needs: run-all-tests
-    uses: ./.github/workflows/_netlify.yml
-    with:
-      service: paywall-app
-      target-env: staging
-      bypass_diff_check: bypass
-    secrets:
-      SITE_ID: ${{ secrets.PAYWALL_APP_NETLIFY_STAGING_SITE_ID }}
-      AUTH_TOKEN: ${{ secrets.PAYWALL_APP_NETLIFY_STAGING_AUTH_TOKEN }}
+#   deploy-paywall-app:
+#     if: ${{ github.repository_owner == 'unlock-protocol' }}
+#     needs: run-all-tests
+#     uses: ./.github/workflows/_netlify.yml
+#     with:
+#       service: paywall-app
+#       target-env: staging
+#       bypass_diff_check: bypass
+#     secrets:
+#       SITE_ID: ${{ secrets.PAYWALL_APP_NETLIFY_STAGING_SITE_ID }}
+#       AUTH_TOKEN: ${{ secrets.PAYWALL_APP_NETLIFY_STAGING_AUTH_TOKEN }}
 
-  deploy-wedlocks:
-    if: ${{ github.repository_owner == 'unlock-protocol' }}
-    needs: run-all-tests
-    uses: ./.github/workflows/_netlify.yml
-    with:
-      service: wedlocks
-      target-env: staging
-      bypass_diff_check: bypass
-    secrets:
-      SITE_ID: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_SITE_ID }}
-      AUTH_TOKEN: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_AUTH_TOKEN }}
-      SMTP_HOST: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_SMTP_HOST }}
-      SMTP_USERNAME: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_SMTP_USERNAME }}
-      SMTP_PASSWORD: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_SMTP_PASSWORD }}
-      BASE64_WEDLOCKS_PRIVATE_KEY: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_BASE64_WEDLOCKS_PRIVATE_KEY }}
+#   deploy-wedlocks:
+#     if: ${{ github.repository_owner == 'unlock-protocol' }}
+#     needs: run-all-tests
+#     uses: ./.github/workflows/_netlify.yml
+#     with:
+#       service: wedlocks
+#       target-env: staging
+#       bypass_diff_check: bypass
+#     secrets:
+#       SITE_ID: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_SITE_ID }}
+#       AUTH_TOKEN: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_AUTH_TOKEN }}
+#       SMTP_HOST: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_SMTP_HOST }}
+#       SMTP_USERNAME: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_SMTP_USERNAME }}
+#       SMTP_PASSWORD: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_SMTP_PASSWORD }}
+#       BASE64_WEDLOCKS_PRIVATE_KEY: ${{ secrets.WEDLOCKS_NETLIFY_STAGING_BASE64_WEDLOCKS_PRIVATE_KEY }}
 
-  deploy-unlock-app-vercel:
-    needs: run-all-tests
-    if: ${{ github.repository_owner == 'unlock-protocol'  }}
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Load secrets from 1Password
-        uses: 1Password/load-secrets-action@v2.0.0
-        with:
-          export-env: true
-        env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          UNLOCK_APP_VERCEL_STAGING_VERCEL_PROJECT_ID: op://secrets/vercel/project-id-unlock-app-staging
-          UNLOCK_APP_VERCEL_STAGING_VERCEL_ORG_ID: op://secrets/vercel/org-id
-          UNLOCK_APP_VERCEL_STAGING_VERCEL_TOKEN: op://secrets/vercel/deployment-token
-          UNLOCK_APP_VERCEL_STAGING_NEXT_PUBLIC_BASE64_WEDLOCKS_PUBLIC_KEY: op://secrets/wedlocks/public-key
+#   deploy-unlock-app-vercel:
+#     needs: run-all-tests
+#     if: ${{ github.repository_owner == 'unlock-protocol'  }}
+#     runs-on: ubuntu-22.04
+#     steps:
+#       - uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+#       - name: Load secrets from 1Password
+#         uses: 1Password/load-secrets-action@v2.0.0
+#         with:
+#           export-env: true
+#         env:
+#           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+#           UNLOCK_APP_VERCEL_STAGING_VERCEL_PROJECT_ID: op://secrets/vercel/project-id-unlock-app-staging
+#           UNLOCK_APP_VERCEL_STAGING_VERCEL_ORG_ID: op://secrets/vercel/org-id
+#           UNLOCK_APP_VERCEL_STAGING_VERCEL_TOKEN: op://secrets/vercel/deployment-token
+#           UNLOCK_APP_VERCEL_STAGING_NEXT_PUBLIC_BASE64_WEDLOCKS_PUBLIC_KEY: op://secrets/wedlocks/public-key
 
-      - uses: ./.github/actions/vercel
-        with:
-          service: unlock-app
-          target-env: staging
+#       - uses: ./.github/actions/vercel
+#         with:
+#           service: unlock-app
+#           target-env: staging
 
-  deploy-docs-production:
-    if: ${{ github.repository_owner == 'unlock-protocol' }} # make sure we dont deploy from forks
-    uses: ./.github/workflows/_netlify.yml
-    with:
-      bypass_diff_check: bypass
-      service: docs
-      target-env: prod
-    secrets:
-      SITE_ID: d6588eac-a04f-43dc-8341-f85d830bff49
-      AUTH_TOKEN: ${{ secrets.UNLOCK_PROTOCOL_COM_NETLIFY_PROD_AUTH_TOKEN }}
+#   deploy-docs-production:
+#     if: ${{ github.repository_owner == 'unlock-protocol' }} # make sure we dont deploy from forks
+#     uses: ./.github/workflows/_netlify.yml
+#     with:
+#       bypass_diff_check: bypass
+#       service: docs
+#       target-env: prod
+#     secrets:
+#       SITE_ID: d6588eac-a04f-43dc-8341-f85d830bff49
+#       AUTH_TOKEN: ${{ secrets.UNLOCK_PROTOCOL_COM_NETLIFY_PROD_AUTH_TOKEN }}
 
-  cache_deps:
-    uses: ./.github/workflows/_docker-cache.yml
-    needs: run-all-tests
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+#   cache_deps:
+#     uses: ./.github/workflows/_docker-cache.yml
+#     needs: run-all-tests
+#     secrets:
+#       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+#       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

@@ -1,0 +1,40 @@
+name: Prod Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'Commit hash for the release PR'     
+        required: true
+  workflow_call:
+    inputs:
+      commit_hash:
+        description: 'Commit hash for the release PR'     
+        required: true
+        type: string
+  
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run release script
+        run: ./scripts/automated-production-pr.sh
+
+      # - name: Render template
+      #   id: template
+      #   uses: chuhlomin/render-template@v1.4
+      #   with:
+      #     template: .github/pull-request-template.md
+          
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'production release as of ${{ github.event.inputs.commit_hash }}'
+          title: 'Prod deploy'
+          body: ${{ steps.template.outputs.result }}
+          branch: prod-deploy
