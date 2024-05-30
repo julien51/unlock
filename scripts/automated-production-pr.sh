@@ -11,6 +11,15 @@ echo "Creating a new branch"
 BRANCH="production-$(date +%Y%m%d-%H%M%S)"
 git checkout -b $BRANCH $COMMIT_TO_DEPLOY
 
+echo ""
+echo "________"
+echo "BRANCHES"
+git branch -a
+echo ""
+echo ""
+echo ""
+echo ""
+
 echo "Diffing versus latest production"
 LATEST_PRODUCTION=`git rev-parse origin/production`
 git reset --soft $LATEST_PRODUCTION
