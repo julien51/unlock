@@ -14,12 +14,12 @@ on:
         type: string
   
 jobs:
- handle_release:
+  release:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Run release script
-      run: ./scripts/automated-production-pr.sh
+      - name: Run release script
+        run: ./scripts/automated-production-pr.sh
